@@ -76,7 +76,7 @@ message StreamingMessage {
     CloseSharedMemoryResourcesRequest close_shared_memory_resources_request = 27;
     CloseSharedMemoryResourcesResponse close_shared_memory_resources_response = 28;
 
-    // Worker indexing message types
+     // Worker Indexing message types
     FunctionsMetadataRequest functions_metadata_request = 29;
     FunctionMetadataResponse function_metadata_response = 30;
 
@@ -84,11 +84,6 @@ message StreamingMessage {
     FunctionLoadRequestCollection function_load_request_collection = 31;
   }
 }
-
-    // Worker Indexing message types
-    FunctionsMetadataRequest functions_metadata_request = 29;
-    FunctionMetadataResponses function_metadata_responses = 30;
-
 
 // Process.Start required info
 //   connection details
