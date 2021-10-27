@@ -16,7 +16,7 @@ jobs:
       buildNumberTemp: $(Build.BuildNumber)
     ${{ if contains(variables['Build.SourceBranch'], '/release/' ) }}:
       isReleaseBuildTemp: true
-    ${{ if contains(variables['Build.SourceBranch'], '/release/extensions' ) }}:
+    ${{ if contains(variables['Build.SourceBranch'], '/release/extension' ) }}:
       isExtensionsReleaseTemp: true
     buildNumber: $[variables.buildNumberTemp]
     isReleaseBuild: $[variables.isReleaseBuildTemp]
