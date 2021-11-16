@@ -6,6 +6,31 @@
       "type": "coreclr",
       "request": "attach",
       "processId": "${command:azureFunctions.pickProcess}"
-    }
+    },
+    {
+      "name": ".NET Core Launch (web)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      // If you have changed target frameworks, make sure to update the program path.
+      "program": "${workspaceFolder}/src/DotNetWorker/bin/Debug/net5.0/Microsoft.Azure.WebJobs.Script.WebHost.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/sample/CSharp",
+      "stopAtEntry": false,
+      // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+      },
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_FUNCTIONS_ENVIRONMENT": "Development",
+        "AzureWebJobsScriptRoot": "/Users/likasem/source/functions/azure-functions-dotnet-worker/samples/FunctionApp/bin/Debug/net5.0",
+        "AzureWebJobsStorage": ""
+      },
+      "sourceFileMap": {
+        "/Views": "${workspaceFolder}/Views"
+      }
+    },
   ]
 }
