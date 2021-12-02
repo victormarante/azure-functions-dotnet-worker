@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\..\build\Extensions.props" />
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.DurableTask</AssemblyName>
+    <RootNamespace>Microsoft.Azure.Functions.Worker.Extensions.DurableTask</RootNamespace>
+    <Description>Durable Task extension for .NET isolated functions</Description>
+
+    <!--Version information-->
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionSuffix>-preview</VersionSuffix>
+
+    <!--Temporarily opting out of documentation. Pending documentation-->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\DotNetWorker.Core\DotNetWorker.Core.csproj" />
+    <ProjectReference Include="..\Worker.Extensions.Abstractions\Worker.Extensions.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DurableTask" Version="3.0.0-preview" />
+  </ItemGroup>
+
+</Project>
