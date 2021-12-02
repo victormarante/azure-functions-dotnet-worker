@@ -18,24 +18,49 @@ namespace Microsoft.Azure.Functions.Worker;
 /// </summary>
 sealed class DefaultDurableClientContext : DurableClientContext
 {
-    internal DefaultDurableClientContext(TaskHubClient client, string taskHubName)
+    readonly DurableClientInputData inputData;
+
+    // Private constructor that's called by the converter inner-class
+    DefaultDurableClientContext(TaskHubClient client, DurableClientInputData inputData)
     {
         this.Client = client ?? throw new ArgumentNullException(nameof(client));
-        this.TaskHubName = taskHubName ?? throw new ArgumentNullException(nameof(taskHubName));
+        this.inputData = inputData ?? throw new ArgumentNullException(nameof(inputData));
+
+        ArgumentNullException.ThrowIfNull(inputData.taskHubName, nameof(inputData.taskHubName));
+        ArgumentNullException.ThrowIfNull(inputData.requiredQueryStringParameters, nameof(inputData.requiredQueryStringParameters));
     }
 
     /// <inheritdoc/>
     public override TaskHubClient Client { get; }
 
     /// <inheritdoc/>
-    public override string TaskHubName { get; }
+    public override string TaskHubName => this.inputData.taskHubName;
 
     /// <inheritdoc/>
     public override HttpResponseData CreateCheckStatusResponse(HttpRequestData request, string instanceId, bool returnInternalServerErrorOnFailure = false)
     {
-        // TODO: Payload should include the management URLs.
+        // TODO: To better support scenarios involving proxies or application gateways, this
+        //       code should take the X-Forwarded-Host, X-Forwarded-Proto, and Forwarded HTTP
+        //       request headers into consideration and generate the base URL accordingly.
+        //       More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded
+        string baseUrl = request.Url.GetLeftPart(UriPartial.Authority);
+        string formattedInstanceId = Uri.EscapeDataString(instanceId);
+        string instanceUrl = $"{baseUrl}/runtime/webhooks/durabletask/instances/{formattedInstanceId}";
+        string commonQueryParameters = this.inputData.requiredQueryStringParameters;
+
         HttpResponseData response = request.CreateResponse(HttpStatusCode.Created);
-        response.WriteString(instanceId);
+        response.Headers.Add("Location", $"{instanceUrl}?{commonQueryParameters}");
+        response.Headers.Add("Content-Type", "application/json");
+
+        response.WriteBytes(JsonSerializer.SerializeToUtf8Bytes(new
+        {
+            id = instanceId,
+            purgeHistoryDeleteUri = $"{instanceUrl}?{commonQueryParameters}",
+            sendEventPostUri = $"{instanceUrl}/raiseEvent/{{eventName}}?{commonQueryParameters}",
+            statusQueryGetUri = $"{instanceUrl}?{commonQueryParameters}",
+            terminatePostUri = $"{instanceUrl}/terminate?reason={{text}}&{commonQueryParameters}",
+        }));
+
         return response;
     }
 
@@ -82,7 +107,7 @@ sealed class DefaultDurableClientContext : DurableClientContext
                     builder.UseServices(this.serviceProvider);
                 }
 
-                DefaultDurableClientContext clientContext = new(builder.Build(), inputData.taskHubName);
+                DefaultDurableClientContext clientContext = new(builder.Build(), inputData);
                 return new ValueTask<ConversionResult>(ConversionResult.Success(clientContext));
             }
             catch (Exception innerException)
@@ -94,5 +119,5 @@ sealed class DefaultDurableClientContext : DurableClientContext
     }
 
     // Serializer is case-sensitive and incoming JSON properties are camel-cased.
-    record DurableClientInputData(string rpcBaseUrl, string taskHubName);
+    record DurableClientInputData(string rpcBaseUrl, string taskHubName, string requiredQueryStringParameters);
 }

@@ -52,8 +52,8 @@ class HelloCitiesTyped : TaskOrchestratorBase<string, string>
         // methods are derived from the names of the activity classes. Note that both
         // activity classes and activity functions are supported by the source generator.
         string result = "";
-        result += await this.Context.CallSayHelloTypedAsync("Tokyo") + ", ";
-        result += await this.Context.CallSayHelloTypedAsync("London") + ", ";
+        result += await this.Context.CallSayHelloTypedAsync("Tokyo") + "; ";
+        result += await this.Context.CallSayHelloTypedAsync("London") + "; ";
         result += await this.Context.CallSayHelloTypedAsync("Seattle");
         return result;
     }
