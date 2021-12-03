@@ -1,7 +1,7 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
-namespace DurableFunctionsApp;
+namespace DurableFunctionsApp.UntypedSample;
 
 using System;
 using System.Threading.Tasks;
@@ -12,9 +12,9 @@ using Microsoft.Extensions.Logging;
 /// <remarks>
 /// The set of functions in this class demonstrate how to use Durable Functions using untyped orchestration and activities.
 /// The programming model used is the most similar to the WebJobs-based Durable Functions experience for .NET in-process.
-/// See the <see cref="HelloCitiesTyped"/> implementation for how to use the newer "typed" programming model.
+/// See the <see cref="TypedSample.HelloCitiesTyped"/> implementation for how to use the newer "typed" programming model.
 /// </remarks>
-public static class HelloSequenceUntyped
+static class HelloSequenceUntyped
 {
     /// <summary>
     /// HTTP-triggered function that starts the <see cref="HelloCitiesUntyped"/> orchestration.
@@ -54,7 +54,7 @@ public static class HelloSequenceUntyped
         });
 
     /// <summary>
-    /// Simple activity function that returns the string "Hello, {input}".
+    /// Simple activity function that returns the string "Hello, {input}!".
     /// </summary>
     /// <param name="cityName">The name of the city to greet.</param>
     /// <returns>Returns a greeting string to the orchestrator that called this activity.</returns>
