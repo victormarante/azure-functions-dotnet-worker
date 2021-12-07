@@ -6,10 +6,18 @@ Durable Functions is not yet officially supported in the .NET Isolated worker. H
 
 It's recommended that you start by copying the sample in this directory and making the necessary changes for it to run independently.
 
-Many of the NuGet packages required for Durable Functions in .NET Isolated are not yet available on nuget.org. Instead, early alpha packages can be found on myget.org. The recommended way to get access to these packages is to add the following to your nuget.config file.
+Durable Functions on .NET Isolated requires .NET 6, so make sure you have the latest [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) installed.
+
+Many of the NuGet packages required for Durable Functions in .NET Isolated are not yet available on nuget.org. Instead, early alpha packages can be found on myget.org. The recommended way to get access to these packages is to add a global reference to the App Service MyGet feed using the following command-line:
+
+```dotnetcli
+dotnet nuget add source https://www.myget.org/F/azure-appservice/api/v3/index.json -n app-service-myget
+```
+
+If successful, you should see something similar to the following added to your global nuget.config.
 
 ```xml
-<add key="azure_app_service" value="https://www.myget.org/F/azure-appservice/api/v2" />
+<add key="app-service-myget" value="https://www.myget.org/F/azure-appservice/api/v3/index.json" />
 ```
 
 The following NuGet packages can be found on this feed:
@@ -34,6 +42,59 @@ To get all the packages you need, add the following to your .NET Isolated csproj
 If you're copying the sample project, be sure to remove all the existing `<ProjectReference />` elements from the copied csproj file. These are unnecessary once you've added the above `<PackageReference />` elements.
 
 If you've followed all the above steps correctly, you should be able to start debugging locally. If your IDE (Visual Studio or VS Code) hasn't helped you with this already, be sure to download the latest v4.x version of the [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local).
+
+## Validating your setup
+
+When you start the sample app, you should see several function triggers listed by the Functions Core Tools output. We'll use an HTTP utility to run and iteract with the orchestrations. The examples below use [HTTPie](https://httpie.io/), but any HTTP client tool should work.
+
+Use the following command to start a new instance of the "Hello cities" orchestration:
+
+```bash
+http POST http://localhost:7071/api/StartHelloCitiesTyped
+```
+
+You should see output similar to the following:
+
+```json
+{
+    "id": "48bcba9db0354138895b099d9e93f0d0",
+    "purgeHistoryDeleteUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/48bcba9db0354138895b099d9e93f0d0?code=XXX",
+    "sendEventPostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/48bcba9db0354138895b099d9e93f0d0/raiseEvent/{eventName}?code=XXX",
+    "statusQueryGetUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/48bcba9db0354138895b099d9e93f0d0?code=XXX",
+    "terminatePostUri": "http://localhost:7071/runtime/webhooks/durabletask/instances/48bcba9db0354138895b099d9e93f0d0/terminate?reason={text}&code=XXX"
+}
+```
+
+To check the status of the orchestration, send an HTTP GET request to the `statusQueryGetUri` endpoint:
+
+```bash
+http GET "http://localhost:7071/runtime/webhooks/durabletask/instances/48bcba9db0354138895b099d9e93f0d0?code=XXX"
+```
+
+By the time you ran the command, the orchestration should have completed and you should see the JSON output similar to the following:
+
+```json
+{
+    "createdTime": "2021-12-07T22:13:31Z",
+    "customStatus": null,
+    "input": null,
+    "instanceId": "48bcba9db0354138895b099d9e93f0d0",
+    "lastUpdatedTime": "2021-12-07T22:13:31Z",
+    "name": "HelloCitiesTyped",
+    "output": "Hello, Tokyo! Hello, London! Hello, Seattle!",
+    "runtimeStatus": "Completed"
+}
+```
+
+If you saw the output above, then you are successfully running Durable Functions in the .NET Isolated worker on .NET 6!
+
+For a more complex and interesting sample, try starting a new instance of the _order processing workflow_ with the following HTTP command:
+
+```bash
+echo '{"Item":"catfood","Quantity":1000,"Price":2999.99}' | http POST http://localhost:7071/api/StartOrderProcessingWorkflow
+```
+
+Follow the instructions in the HTTP output to complete the orchestration.
 
 ## Breaking changes from in-process Durable Functions
 
