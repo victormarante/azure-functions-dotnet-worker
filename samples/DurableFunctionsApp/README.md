@@ -43,7 +43,7 @@ If you're copying the sample project, be sure to remove all the existing `<Proje
 
 If you've followed all the above steps correctly, you should be able to start debugging locally. If your IDE (Visual Studio or VS Code) hasn't helped you with this already, be sure to download the latest v4.x version of the [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local).
 
-## Validating your setup
+## Running the samples
 
 When you start the sample app, you should see several function triggers listed by the Functions Core Tools output. We'll use an HTTP utility to run and iteract with the orchestrations. The examples below use [HTTPie](https://httpie.io/), but any HTTP client tool should work.
 
@@ -187,4 +187,3 @@ class SayHelloTyped : TaskActivityBase<string, string>
 ```
 
 > **NOTE**: By design, class-based orchestrators do not support constructor injection since dependency injection is inherently non-deterministic.
-
