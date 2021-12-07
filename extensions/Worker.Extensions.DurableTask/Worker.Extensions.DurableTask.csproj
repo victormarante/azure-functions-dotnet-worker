@@ -12,9 +12,12 @@
     <RootNamespace>Microsoft.Azure.Functions.Worker.Extensions.DurableTask</RootNamespace>
     <Description>Durable Task extension for .NET isolated functions</Description>
 
-    <!--Version information-->
+    <!-- Version information (overrides default build configuration) -->
     <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix>-preview</VersionSuffix>
+    <VersionSuffix>alpha</VersionSuffix>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
+    <Version>$(VersionPrefix)-$(VersionSuffix)</Version>
 
     <!--Temporarily opting out of documentation. Pending documentation-->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
@@ -26,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.DurableTask" Version="3.0.0-preview" />
+    <PackageReference Include="Microsoft.DurableTask" Version="0.1.0-alpha" />
   </ItemGroup>
 
 </Project>

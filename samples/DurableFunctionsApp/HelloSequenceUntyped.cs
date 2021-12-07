@@ -47,8 +47,8 @@ static class HelloSequenceUntyped
         DurableOrchestrator.LoadAndRunAsync(state, async context =>
         {
             string result = "";
-            result += await context.CallActivityAsync<string>(nameof(SayHelloUntyped), "Tokyo") + "; ";
-            result += await context.CallActivityAsync<string>(nameof(SayHelloUntyped), "London") + "; ";
+            result += await context.CallActivityAsync<string>(nameof(SayHelloUntyped), "Tokyo") + " ";
+            result += await context.CallActivityAsync<string>(nameof(SayHelloUntyped), "London") + " ";
             result += await context.CallActivityAsync<string>(nameof(SayHelloUntyped), "Seattle");
             return result;
         });

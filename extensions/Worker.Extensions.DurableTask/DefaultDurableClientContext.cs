@@ -42,7 +42,8 @@ sealed class DefaultDurableClientContext : DurableClientContext
         // TODO: To better support scenarios involving proxies or application gateways, this
         //       code should take the X-Forwarded-Host, X-Forwarded-Proto, and Forwarded HTTP
         //       request headers into consideration and generate the base URL accordingly.
-        //       More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded
+        //       More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded.
+        //       One potential workaround is to set ASPNETCORE_FORWARDEDHEADERS_ENABLED to true.
         string baseUrl = request.Url.GetLeftPart(UriPartial.Authority);
         string formattedInstanceId = Uri.EscapeDataString(instanceId);
         string instanceUrl = $"{baseUrl}/runtime/webhooks/durabletask/instances/{formattedInstanceId}";
