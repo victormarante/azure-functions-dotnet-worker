@@ -34,7 +34,7 @@ jobs:
   steps:
   - pwsh: |
       Import-Module ./tools/emulatorsHelper.psm1 -Force
-      StartEmulator -AsJob -NoWait
+      StartEmulator -NoWait #-AsJob
     displayName: "Start emulators (-AsJob -NoWait)"
 
   - template: ../build/install-dotnet.yml
