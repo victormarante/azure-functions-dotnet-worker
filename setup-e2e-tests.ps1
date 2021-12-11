@@ -15,7 +15,10 @@ param(
     $SkipCoreTools,
 
     [Switch]
-    $UseCoreToolsBuildFromIntegrationTests
+    $UseCoreToolsBuildFromIntegrationTests,
+
+    [Switch]
+    $WaitForEnumatorToStart
 )
 
 # A function that checks exit codes and fails script if an error is found 
@@ -107,7 +110,15 @@ if ($SkipStorageEmulator -And $SkipCosmosDBEmulator)
 }
 else 
 {
-  .\tools\start-emulators.ps1 -SkipStorageEmulator:$SkipStorageEmulator -SkipCosmosDBEmulator:$SkipCosmosDBEmulator
+  Import-Module "$PSScriptRoot/tools/emulatorsHelper.psm1" -Force
+  if ($WaitForEnumatorToStart.IsPresent)
+  {
+    WaitForStorageEmulatorToStartRunning
+  }
+  else
+  {
+    StartEmulator -SkipStorageEmulator:$SkipStorageEmulator -SkipCosmosDBEmulator:$SkipCosmosDBEmulator
+  }
 }
 
 StopOnFailedExecution
