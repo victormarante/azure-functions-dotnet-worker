@@ -15,6 +15,11 @@
   <Import Project="..\..\..\build\Extensions.props" />
 
   <ItemGroup>
+    <PackageReference Include="SendGrid" Version="9.25.2" />
+    <PackageReference Include="System.Text.Json" Version="6.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Worker.Extensions.Abstractions\src\Worker.Extensions.Abstractions.csproj" />
   </ItemGroup>
 
