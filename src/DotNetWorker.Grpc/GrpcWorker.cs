@@ -131,6 +131,10 @@ namespace Microsoft.Azure.Functions.Worker
             {
                 responseMessage.FunctionLoadResponse = FunctionLoadRequestHandler(request.FunctionLoadRequest, _application, _methodInfoLocator);
             }
+            else if (request.ContentCase == MsgType.FunctionLoadRequestCollection)
+            {
+                responseMessage.FunctionLoadResponse = FunctionLoadRequestCollectionHandler(request.FunctionLoadRequestCollection, _application, _methodInfoLocator);
+            }
             else if (request.ContentCase == MsgType.FunctionEnvironmentReloadRequest)
             {
                 // No-op for now, but return a response.
@@ -235,6 +239,7 @@ namespace Microsoft.Azure.Functions.Worker
             response.Capabilities.Add("RpcHttpTriggerMetadataRemoved", bool.TrueString);
             response.Capabilities.Add("UseNullableValueDictionaryForHttp", bool.TrueString);
             response.Capabilities.Add("TypedDataCollection", bool.TrueString);
+            response.Capabilities.Add("AcceptsListOfFunctionLoadRequests", bool.TrueString);
 
             return response;
         }
@@ -264,6 +269,46 @@ namespace Microsoft.Azure.Functions.Worker
                 }
             }
 
+            return response;
+        }
+
+        internal static FunctionLoadResponse FunctionLoadRequestCollectionHandler(FunctionLoadRequestCollection request, IFunctionsApplication application, IMethodInfoLocator methodInfoLocator)
+        {
+            foreach(var funcLoadRequest in request.FunctionLoadRequests)
+            {
+                var funcLoadResponse = new FunctionLoadResponse
+                {
+                    FunctionId = funcLoadRequest.FunctionId,
+                    Result = StatusResult.Success
+                };
+
+                if (!funcLoadRequest.Metadata.IsProxy)
+                {
+                    try
+                    {
+                        FunctionDefinition definition = funcLoadRequest.ToFunctionDefinition(methodInfoLocator);
+                        application.LoadFunction(definition);
+                    }
+                    catch (Exception ex)
+                    {
+                        funcLoadResponse.Result = new StatusResult
+                        {
+                            Status = StatusResult.Types.Status.Failure,
+                            Exception = ex.ToRpcException()
+                        };
+                    }
+                }
+            }
+            // faking this for e2e testing while design for collection of load requests is in progress
+            var response = new FunctionLoadResponse
+            {
+                FunctionId = Guid.NewGuid().ToString(),
+                Result = new StatusResult
+                {
+                    Status = StatusResult.Types.Status.Failure
+                }
+            };
+           
             return response;
         }
     }
