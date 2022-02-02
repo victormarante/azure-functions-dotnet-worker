@@ -133,7 +133,7 @@ namespace Microsoft.Azure.Functions.Worker
             }
             else if (request.ContentCase == MsgType.FunctionLoadRequestCollection)
             {
-                responseMessage.FunctionLoadResponse = FunctionLoadRequestCollectionHandler(request.FunctionLoadRequestCollection, _application, _methodInfoLocator);
+                responseMessage.FunctionLoadResponseCollection = FunctionLoadRequestCollectionHandler(request.FunctionLoadRequestCollection, _application, _methodInfoLocator);
             }
             else if (request.ContentCase == MsgType.FunctionEnvironmentReloadRequest)
             {
@@ -272,8 +272,10 @@ namespace Microsoft.Azure.Functions.Worker
             return response;
         }
 
-        internal static FunctionLoadResponse FunctionLoadRequestCollectionHandler(FunctionLoadRequestCollection request, IFunctionsApplication application, IMethodInfoLocator methodInfoLocator)
+        internal static FunctionLoadResponseCollection FunctionLoadRequestCollectionHandler(FunctionLoadRequestCollection request, IFunctionsApplication application, IMethodInfoLocator methodInfoLocator)
         {
+            var response = new FunctionLoadResponseCollection();
+
             foreach(var funcLoadRequest in request.FunctionLoadRequests)
             {
                 var funcLoadResponse = new FunctionLoadResponse
@@ -288,6 +290,8 @@ namespace Microsoft.Azure.Functions.Worker
                     {
                         FunctionDefinition definition = funcLoadRequest.ToFunctionDefinition(methodInfoLocator);
                         application.LoadFunction(definition);
+
+                        response.FunctionLoadResponses.Add(funcLoadResponse);
                     }
                     catch (Exception ex)
                     {
@@ -299,15 +303,6 @@ namespace Microsoft.Azure.Functions.Worker
                     }
                 }
             }
-            // faking this for e2e testing while design for collection of load requests is in progress
-            var response = new FunctionLoadResponse
-            {
-                FunctionId = Guid.NewGuid().ToString(),
-                Result = new StatusResult
-                {
-                    Status = StatusResult.Types.Status.Failure
-                }
-            };
            
             return response;
         }
