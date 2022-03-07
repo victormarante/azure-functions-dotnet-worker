@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.Http</AssemblyName>
+      <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.Http</AssemblyName>
     <RootNamespace>Microsoft.Azure.Functions.Worker.Extensions.Http</RootNamespace>
     <Description>HTTP extensions for .NET isolated functions</Description>
 
@@ -12,6 +12,7 @@
   <Import Project="..\..\..\build\Extensions.props" />
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\DotNetWorker\DotNetWorker.csproj" />
     <ProjectReference Include="..\..\Worker.Extensions.Abstractions\src\Worker.Extensions.Abstractions.csproj" />
   </ItemGroup>
 
