@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.DependencyModel;
 
 namespace Microsoft.Azure.Functions.Worker.Core
 {
@@ -12,7 +11,7 @@ namespace Microsoft.Azure.Functions.Worker.Core
         {
             var extensionStartupInterfaceType = typeof(IWorkerExtensionStartup);
 
-            WorkerExtensionAssemblyLoader.LoadAssembliesFromDepsJSON();
+            //WorkerExtensionAssemblyLoader.LoadAssembliesFromDepsJSON();
 
             var allLoadedAssemblies = AppDomain.CurrentDomain.GetAssemblies()
                 .ToList();
@@ -40,31 +39,31 @@ namespace Microsoft.Azure.Functions.Worker.Core
 
     internal class WorkerExtensionAssemblyLoader
     {
-        internal static void LoadAssembliesFromDepsJSON()
-        {
-            var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        //internal static void LoadAssembliesFromDepsJSON()
+        //{
+        //    var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            var depsFilePath = Directory.EnumerateFiles(basePath).First(a => a.EndsWith(".deps.json"));
+        //    var depsFilePath = Directory.EnumerateFiles(basePath).First(a => a.EndsWith(".deps.json"));
 
-            if (depsFilePath != null)
-            {
-                var reader = new DependencyContextJsonReader();
+        //    if (depsFilePath != null)
+        //    {
+        //        var reader = new DependencyContextJsonReader();
 
-                using (var file = File.OpenRead(depsFilePath))
-                {
-                    // DependencyContext requires Microsoft.Extensions.DependencyModel package.
-                    DependencyContext? depsContext = reader.Read(file);
+        //        using (var file = File.OpenRead(depsFilePath))
+        //        {
+        //            // DependencyContext requires Microsoft.Extensions.DependencyModel package.
+        //            DependencyContext? depsContext = reader.Read(file);
 
-                    var extensionAssemblies = depsContext.CompileLibraries
-                         .Where(assembly => assembly.Name.Contains(".Worker.Extensions."))
-                        .ToList();
-                    foreach (var assembly in extensionAssemblies)
-                    {
-                        AppDomain.CurrentDomain.Load(assembly.Name);
-                    }
-                }
-            }
-        }
+        //            var extensionAssemblies = depsContext.CompileLibraries
+        //                 .Where(assembly => assembly.Name.Contains(".Worker.Extensions."))
+        //                .ToList();
+        //            foreach (var assembly in extensionAssemblies)
+        //            {
+        //                AppDomain.CurrentDomain.Load(assembly.Name);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
 

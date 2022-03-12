@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.Http</AssemblyName>
+    <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.Http</AssemblyName>
     <RootNamespace>Microsoft.Azure.Functions.Worker.Extensions.Http</RootNamespace>
     <Description>HTTP extensions for .NET isolated functions</Description>
 
