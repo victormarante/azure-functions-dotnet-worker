@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.Http</AssemblyName>
+      <TargetFramework>netstandard2.0</TargetFramework>
+
+      <AssemblyName>Microsoft.Azure.Functions.Worker.Extensions.Http</AssemblyName>
     <RootNamespace>Microsoft.Azure.Functions.Worker.Extensions.Http</RootNamespace>
     <Description>HTTP extensions for .NET isolated functions</Description>
 
     <!--Version information-->
-    <VersionPrefix>3.0.13</VersionPrefix>
+    <VersionPrefix>4.0.1</VersionPrefix>
   </PropertyGroup>
 
   <Import Project="..\..\..\build\Extensions.props" />
