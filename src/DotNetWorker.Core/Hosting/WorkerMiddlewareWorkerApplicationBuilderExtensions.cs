@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Extensions.Hosting
 {
+
+
     /// <summary>
     /// Provides extension methods to work with Worker Middleware against a <see cref="IHostBuilder"/>.
     /// </summary>
@@ -111,24 +113,24 @@ namespace Microsoft.Extensions.Hosting
             return builder;
         }
 
-        /// <summary>
-        /// Configures the <see cref="IFunctionsWorkerApplicationBuilder"/> to use the provided inline middleware delegate.
-        /// </summary>
-        /// <param name="builder">The <see cref="IFunctionsWorkerApplicationBuilder"/> to configure.</param>
-        /// <param name="middleware">The middleware to add to the invocation pipeline.</param>
-        /// <returns>The same <see cref="IFunctionsWorkerApplicationBuilder"/> for chaining.</returns>
-        public static IFunctionsWorkerApplicationBuilder UseMiddleware(this IFunctionsWorkerApplicationBuilder builder, Func<FunctionContext, Func<Task>, Task> middleware)
-        {
+        ///// <summary>
+        ///// Configures the <see cref="IFunctionsWorkerApplicationBuilder"/> to use the provided inline middleware delegate.
+        ///// </summary>
+        ///// <param name="builder">The <see cref="IFunctionsWorkerApplicationBuilder"/> to configure.</param>
+        ///// <param name="middleware">The middleware to add to the invocation pipeline.</param>
+        ///// <returns>The same <see cref="IFunctionsWorkerApplicationBuilder"/> for chaining.</returns>
+        //public static IFunctionsWorkerApplicationBuilder UseMiddleware(this IFunctionsWorkerApplicationBuilder builder, Func<FunctionContext, Func<Task>, Task> middleware)
+        //{
 
-            builder.Use(next =>
-            {
-                return context =>
-                {
-                    return middleware(context, () => next.Invoke(context));
-                };
-            });
+        //    builder.Use(next =>
+        //    {
+        //        return context =>
+        //        {
+        //            return middleware(context, () => next.Invoke(context));
+        //        };
+        //    });
 
-            return builder;
-        }
+        //    return builder;
+        //}
     }
 }

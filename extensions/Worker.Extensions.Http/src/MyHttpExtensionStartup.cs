@@ -1,6 +1,5 @@
-﻿using Microsoft.Azure.Functions.Worker.Core;
+﻿using Microsoft.Azure.Functions.Worker.Extensions.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Azure.Functions.Worker.Extensions.Http
 {

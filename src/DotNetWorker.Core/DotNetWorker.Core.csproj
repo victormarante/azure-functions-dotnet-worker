@@ -35,4 +35,8 @@
         <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotNetWorker.Abstractions\DotNetWorker.Abstractions.csproj" />
+    </ItemGroup>
 </Project>

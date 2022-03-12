@@ -12,7 +12,6 @@
   <Import Project="..\..\..\build\Extensions.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\DotNetWorker\DotNetWorker.csproj" />
     <ProjectReference Include="..\..\Worker.Extensions.Abstractions\src\Worker.Extensions.Abstractions.csproj" />
   </ItemGroup>
 
