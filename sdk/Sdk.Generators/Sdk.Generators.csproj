@@ -10,7 +10,7 @@
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
         <MinorProductVersion>9</MinorProductVersion>
-        <PatchProductVersion>10</PatchProductVersion>
+        <PatchProductVersion>11</PatchProductVersion>
     </PropertyGroup>
 
     <Import Project="..\..\build\Common.props" />

@@ -11,8 +11,8 @@
 
   <Import Project="..\..\..\build\Common.props" />
 
-  <ItemGroup>
+  <!--<ItemGroup>
     <ProjectReference Include="..\..\..\src\DotNetWorker.Abstractions\DotNetWorker.Abstractions.csproj" />
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>

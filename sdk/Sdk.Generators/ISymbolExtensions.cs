@@ -1,12 +1,22 @@
-﻿using System.Text;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
+
+using System.Text;
 using Microsoft.CodeAnalysis;
 
 namespace Microsoft.Azure.Functions.Worker.Sdk.Generators
 {
     internal static class ISymbolExtensions
     {
-        internal static string GetFullName(this ISymbol symbol)
+        /// <summary>
+        /// Walks the symbol tree to generate the fully qualified name of a symbol.
+        /// </summary>
+        /// <param name="symbol"></param>
+        /// <returns></returns>
+        internal static string GetFullName(this ITypeSymbol typeSymbol)
         {
+            var symbol = typeSymbol as ISymbol;
+          
             if (symbol == null || IsRootNamespace(symbol))
             {
                 return string.Empty;
