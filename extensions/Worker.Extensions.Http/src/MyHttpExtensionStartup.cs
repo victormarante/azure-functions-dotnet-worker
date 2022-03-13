@@ -1,5 +1,8 @@
 ﻿using Microsoft.Azure.Functions.Worker.Extensions.Abstractions;
+using Microsoft.Azure.Functions.Worker.Extensions.Http;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: WorkerExtensionStartup(typeof(MyHttpExtensionStartup), "Http for Worker")]
 
 namespace Microsoft.Azure.Functions.Worker.Extensions.Http
 {

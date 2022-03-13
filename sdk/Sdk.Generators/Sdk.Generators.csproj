@@ -9,7 +9,8 @@
         <RootNamespace>Microsoft.Azure.Functions.Worker.Sdk.Generators</RootNamespace>
         <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
         <CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
-        <MinorProductVersion>6</MinorProductVersion>
+        <MinorProductVersion>9</MinorProductVersion>
+        <PatchProductVersion>10</PatchProductVersion>
     </PropertyGroup>
 
     <Import Project="..\..\build\Common.props" />

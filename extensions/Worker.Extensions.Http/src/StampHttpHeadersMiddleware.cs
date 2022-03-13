@@ -17,7 +17,7 @@ namespace Microsoft.Azure.Functions.Worker.Extensions.Http
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
             var logger = context.GetLogger<StampHttpHeadersMiddleware>();
-            logger.LogInformation($"****** StampHttpHeadersMiddleware {_myFooService.GetFooMessage()} *******");
+            logger.LogInformation($"****** With SourceGen-StampHttpHeadersMiddleware {_myFooService.GetFooMessage()} *******");
 
             await next(context);
         }

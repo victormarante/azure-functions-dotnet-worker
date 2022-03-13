@@ -1,48 +1,50 @@
 ﻿using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
-namespace Sdk.Generators
+namespace Microsoft.Azure.Functions.Worker.Sdk.Generators
 {
     [Generator]
     public class StartupLocatorSourceGenerator : ISourceGenerator
     {
+        private string attributeFullTypeName = "Microsoft.Azure.Functions.Worker.Extensions.Abstractions.WorkerExtensionStartupAttribute";
+        private string attributeClassName = "WorkerExtensionStartupAttribute";
+
         public void Execute(GeneratorExecutionContext context)
         {
-            //var typeSymbol = "WorkerExtensionStartupAttribute";
-
             //// Find the main method
             var mainMethod = context.Compilation.GetEntryPoint(context.CancellationToken);
-
-            //var assemblies = context.Compilation.SourceModule.ReferencedAssemblySymbols
-            //    .Where(s => s.GetAttributes().Any(c => c.AttributeClass.Name == typeSymbol))
-            //    .ToList();
+            
+            var assemblies = context.Compilation.SourceModule.ReferencedAssemblySymbols
+                                                .Where(s => s.GetAttributes()
+                                                             .Any(a => a.AttributeClass?.Name == attributeClassName &&
+                                                                       //Call GetFullName only if class name matches.
+                                                                       a.AttributeClass.GetFullName() == attributeFullTypeName
+                                                                    ));
 
 
             // type and assembly names;
             var typeAndAssemblyDict = new Dictionary<string, string>();
-            //foreach (var a in assemblies)
-            //{
-            //    var startupAttr = a.GetAttributes().First(a => a.AttributeClass.Name == typeSymbol);
 
-            //    TypedConstant type = startupAttr.ConstructorArguments[0];
-            //    if (type.Value is ITypeSymbol typeSymbol1)
-            //    {
-            //        // Full type name (with namespace)
-            //        var fullTypeName = typeSymbol1.ToDisplayString();
-            //        var assemblyName = a.ToDisplayString();
-            //        typeAndAssemblyDict.Add(fullTypeName, assemblyName);
-            //    }
-            //}
 
-            typeAndAssemblyDict.Add("Foo2", "Bar2");
+            foreach (var assembly in assemblies)
+            {
+                var startupAttr = assembly.GetAttributes()
+                                          .First(a => a.AttributeClass?.Name == attributeClassName &&
+                                                      a.AttributeClass.GetFullName() == attributeFullTypeName);
+
+                TypedConstant type = startupAttr.ConstructorArguments[0];
+                if (type.Value is ITypeSymbol typeSymbol1)
+                {
+                    var fullTypeName = typeSymbol1.ToDisplayString();
+                    var assemblyName = assembly.ToDisplayString();
+                    typeAndAssemblyDict.Add(fullTypeName, assemblyName);
+                }
+            }
+
 
             SourceText sourceText;
             using (var stringWriter = new StringWriter())
@@ -50,10 +52,10 @@ namespace Sdk.Generators
             {
                 indentedTextWriter.WriteLine("// Auto-generated code");
                 indentedTextWriter.WriteLine("using System.Collections.Generic;");
-                indentedTextWriter.WriteLine($"namespace {mainMethod?.ContainingNamespace?.ToDisplayString() ?? "MyTestNamespace"}");
+                indentedTextWriter.WriteLine($"namespace {mainMethod?.ContainingNamespace?.ToDisplayString() ?? "MyUnitTestNamespace"}");
                 indentedTextWriter.WriteLine("{");
                 indentedTextWriter.Indent++;
-                indentedTextWriter.WriteLine("public class MyExtensionStartupInfoProvider");
+                indentedTextWriter.WriteLine("public class ExtensionStartupDataProvider");
                 indentedTextWriter.WriteLine("{");
                 indentedTextWriter.Indent++;
                 indentedTextWriter.WriteLine("public IEnumerable<KeyValuePair<string, string>> GetItems()");
@@ -65,6 +67,7 @@ namespace Sdk.Generators
                 {
                     indentedTextWriter.WriteLine($"dict.Add(\"{kp.Key}\",\"{kp.Value}\");");
                 }
+
                 indentedTextWriter.WriteLine("return dict;");
                 indentedTextWriter.Indent--;
                 indentedTextWriter.WriteLine("}");
@@ -83,7 +86,6 @@ namespace Sdk.Generators
 
         public void Initialize(GeneratorInitializationContext context)
         {
-            // No initialization required for this one
         }
     }
 }
