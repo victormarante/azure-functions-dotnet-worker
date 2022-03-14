@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.Functions.Worker.Extensions.Abstractions;
+using Microsoft.Azure.Functions.Worker.Abstractions;
 using Microsoft.Azure.Functions.Worker.Extensions.CosmosDB;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +31,7 @@ namespace Microsoft.Azure.Functions.Worker.Extensions.CosmosDB
         public async Task Invoke(FunctionContext context, FunctionExecutionDelegate next)
         {
             var logger = context.GetLogger<MyCosmosProcessingMiddleware>();
-            logger.LogInformation($"****** With SourceGen-StampHttpHeadersMiddleware {_myFooService.GetFooMessage()} *******");
+            logger.LogInformation($"****** With SourceGen-MyCosmosProcessingMiddleware {_myFooService.GetFooMessage()} *******");
 
             await next(context);
         }

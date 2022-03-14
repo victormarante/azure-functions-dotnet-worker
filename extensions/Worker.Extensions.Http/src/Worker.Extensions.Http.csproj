@@ -8,13 +8,13 @@
     <Description>HTTP extensions for .NET isolated functions</Description>
 
     <!--Version information-->
-    <VersionPrefix>4.0.5</VersionPrefix>
+    <VersionPrefix>4.0.6</VersionPrefix>
   </PropertyGroup>
 
   <Import Project="..\..\..\build\Extensions.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.Functions.Worker.Abstractions" Version="1.3.0-preview1-local" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Abstractions" Version="1.4.0-preview1-local" />
   </ItemGroup>
 
   <ItemGroup>

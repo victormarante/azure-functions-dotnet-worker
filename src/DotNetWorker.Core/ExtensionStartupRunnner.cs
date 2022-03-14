@@ -5,20 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Azure.Functions.Worker.Extensions.Abstractions;
+using Microsoft.Azure.Functions.Worker.Abstractions;
 
 namespace Microsoft.Azure.Functions.Worker.Core
 {
     // to do: Catch exception on each Configure call of exn startup type instance.
     internal class ExtensionStartupRunnner
     {
-        private const string StartupDataAttributeName = "ExtensionStartupData";
+        private const string StartupDataAttributeName = "ExtensionStartupDataAttribute";
 
         internal static void RunExtensionStartupCode(IFunctionsWorkerApplicationBuilder builder)
         {
             // Find the auto(source) generated class which has extension startup type name and assembly names.
             Type? startupDataProviderGeneratedType = (Assembly.GetEntryAssembly())!.GetTypes()
-                .FirstOrDefault(v => v.GetCustomAttributes().Any(at => at.GetType().Name == StartupDataAttributeName));
+                .FirstOrDefault(v => v.GetCustomAttributes()
+                                      .Any(at => at.GetType().Name == StartupDataAttributeName));
 
             if (startupDataProviderGeneratedType == null)
             {

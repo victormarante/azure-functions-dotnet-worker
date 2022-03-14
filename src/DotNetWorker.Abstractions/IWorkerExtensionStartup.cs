@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the MIT License. See License.txt in the project root for license information.
 
-namespace Microsoft.Azure.Functions.Worker.Extensions.Abstractions
+namespace Microsoft.Azure.Functions.Worker.Abstractions
 {
+    /// <summary>
+    /// A type representing the contract for worker extension startup implementation.
+    /// </summary>
     public interface IWorkerExtensionStartup
-
     {
         /// <summary>
-        /// C
-        /// </summary>IFunctionsWorkerApplicationBuilder
-        /// <param name="applicationBuilder"></param>
+        /// Configures the function worker application builder option.
+        /// </summary>
+        /// <param name="applicationBuilder">The IFunctionsWorkerApplicationBuilder instance.</param>
         void Configure(IFunctionsWorkerApplicationBuilder applicationBuilder);
     }
 }

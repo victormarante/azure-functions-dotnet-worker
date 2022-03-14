@@ -11,7 +11,7 @@ using System.Text;
 namespace Microsoft.Azure.Functions.Worker.Sdk.Generators
 {
     /// <summary>
-    /// Generates code a class with a method to return the startup type names and it's assembly names.
+    /// Generates a class with a method to return the startup type names and it's assembly names.
     /// Also generates an attribute to decorate the class with. 
     /// </summary>
 
@@ -34,12 +34,19 @@ namespace Microsoft.Azure.Functions.Worker.Sdk.Generators
     [Generator]
     public class StartupLocatorSourceGenerator : ISourceGenerator
     {
-        private string attributeFullTypeName = "Microsoft.Azure.Functions.Worker.Extensions.Abstractions.WorkerExtensionStartupAttribute";
-        private string attributeClassName = "WorkerExtensionStartupAttribute";
+        /// <summary>
+        /// The attribute extension authors apply on an assembly which contains their startup type.
+        /// </summary>
+        private string attributeTypeName = "WorkerExtensionStartupAttribute";
+
+        /// <summary>
+        /// Fully qualified name of the above "WorkerExtensionStartupAttribute" attribute.
+        /// </summary>
+        private string attributeTypeFullName = "Microsoft.Azure.Functions.Worker.Abstractions.WorkerExtensionStartupAttribute";
 
         public void Execute(GeneratorExecutionContext context)
         {
-            var typeAndAssemblyNamesDict = GetStatupTypeAndAssemblyMapping(context);
+            var typeAndAssemblyNamesDict = GetStartupTypeAndAssemblyMapping(context);
 
             if (!typeAndAssemblyNamesDict.Any())
             {
@@ -75,7 +82,7 @@ namespace Microsoft.Azure.Functions.Worker.Sdk.Generators
         /// Gets the startup type name and it's assembly names in the form of a dictionary.
         /// The key will be the type name and value will be the assembly name.
         /// </summary>
-        private IDictionary<string, string> GetStatupTypeAndAssemblyMapping(GeneratorExecutionContext context)
+        private IDictionary<string, string> GetStartupTypeAndAssemblyMapping(GeneratorExecutionContext context)
         {
             Dictionary<string, string> typeAndAssemblyDict = new();
 
@@ -83,16 +90,16 @@ namespace Microsoft.Azure.Functions.Worker.Sdk.Generators
             // Extension authors should decorate their assembly with this attribute if they want to take part in startup.
             var assemblies = context.Compilation.SourceModule.ReferencedAssemblySymbols
                                                 .Where(s => s.GetAttributes()
-                                                             .Any(a => a.AttributeClass?.Name == attributeClassName &&
+                                                             .Any(a => a.AttributeClass?.Name == attributeTypeName &&
                                                                        //Call GetFullName only if class name matches.
-                                                                       a.AttributeClass.GetFullName() == attributeFullTypeName
+                                                                       a.AttributeClass.GetFullName() == attributeTypeFullName
                                                                     ));
 
             foreach (var assembly in assemblies)
             {
                 var startupAttr = assembly.GetAttributes()
-                                          .First(a => a.AttributeClass?.Name == attributeClassName &&
-                                                      a.AttributeClass.GetFullName() == attributeFullTypeName);
+                                          .First(a => a.AttributeClass?.Name == attributeTypeName &&
+                                                      a.AttributeClass.GetFullName() == attributeTypeFullName);
 
                 TypedConstant firstConstructorParam = startupAttr.ConstructorArguments[0];
                 if (firstConstructorParam.Value is ITypeSymbol typeSymbol)
