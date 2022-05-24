@@ -126,6 +126,8 @@ namespace Microsoft.Azure.Functions.Worker
             else if (request.ContentCase == MsgType.WorkerInitRequest)
             {
                 responseMessage.WorkerInitResponse = WorkerInitRequestHandler(request.WorkerInitRequest);
+                Console.WriteLine("Sleeping 10seconds");
+                System.Threading.Thread.Sleep(10000);
             }
             else if (request.ContentCase == MsgType.FunctionLoadRequest)
             {
@@ -176,6 +178,7 @@ namespace Microsoft.Azure.Functions.Worker
                 }
 
                 await application.InvokeFunctionAsync(context);
+                // System.Environment.FailFast("Lilian error happened");
 
                 var functionBindings = context.GetBindings();
 
