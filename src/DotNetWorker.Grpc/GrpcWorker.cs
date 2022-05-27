@@ -2,6 +2,7 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -60,6 +61,18 @@ namespace Microsoft.Azure.Functions.Worker
 
         public async Task StartAsync(CancellationToken token)
         {
+            var crashFile = "_crash.txt";
+            if (File.Exists(crashFile))
+            {
+                File.Delete(crashFile);
+                Console.WriteLine("Crashing worker");
+                System.Environment.FailFast("StartAsync error happened");
+            }
+            else
+            {
+                await File.WriteAllTextAsync(crashFile, "die");
+            }
+
             var eventStream = _rpcClient.EventStream(cancellationToken: token);
 
             await SendStartStreamMessageAsync(eventStream.RequestStream);
@@ -126,8 +139,7 @@ namespace Microsoft.Azure.Functions.Worker
             else if (request.ContentCase == MsgType.WorkerInitRequest)
             {
                 responseMessage.WorkerInitResponse = WorkerInitRequestHandler(request.WorkerInitRequest);
-                Console.WriteLine("Sleeping 10seconds");
-                System.Threading.Thread.Sleep(10000);
+                //crash here
             }
             else if (request.ContentCase == MsgType.FunctionLoadRequest)
             {
@@ -173,12 +185,11 @@ namespace Microsoft.Azure.Functions.Worker
                 invocationFeatures.Set<IFunctionBindingsFeature>(new GrpcFunctionBindingsFeature(context, request, outputBindingsInfoProvider));
 
                 if (functionInputConversionFeatureProvider.TryCreate(typeof(DefaultInputConversionFeature), out var conversion))
-                {                                    
+                {
                     invocationFeatures.Set<IInputConversionFeature>(conversion!);
                 }
 
                 await application.InvokeFunctionAsync(context);
-                // System.Environment.FailFast("Lilian error happened");
 
                 var functionBindings = context.GetBindings();
 
