@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker.Context;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -36,7 +37,7 @@ namespace Microsoft.Azure.Functions.Worker.Tests
         }
 
         [Fact]
-        public void CreateAndDisposeInstanceServicesTest()
+        public async Task CreateAndDisposeInstanceServicesTestAsync()
         {
             var services = _defaultFunctionContext.InstanceServices;
             Assert.NotNull(services);
@@ -47,7 +48,7 @@ namespace Microsoft.Azure.Functions.Worker.Tests
             Assert.NotNull(transientService);
             Assert.NotNull(singletonService);
 
-            _defaultFunctionContext.Dispose();
+            await _defaultFunctionContext.DisposeAsync();
 
             Assert.Throws<ObjectDisposedException>(services.GetService<SingletonService>);
             Assert.Throws<ObjectDisposedException>(services.GetService<TransientService>);
